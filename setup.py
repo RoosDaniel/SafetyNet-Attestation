@@ -1,11 +1,12 @@
 import setuptools
 
+
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="SafetyNet-Attestation",
-    version="0.0.1",
+    name="pySafetyNet-Attestation",
+    version="0.0.2",
     author="Daniel Roos",
     author_email="daniel@roos.io",
     description="Verify JWS-attestations from Google's SafetyNet.",

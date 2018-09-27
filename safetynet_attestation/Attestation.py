@@ -26,7 +26,7 @@ class InvalidJWSBodyException(Exception):
         return cls("%s missing or False." % item)
 
 
-class SafetyNet:
+class Attestation:
     jws_token = ""
 
     header = None
