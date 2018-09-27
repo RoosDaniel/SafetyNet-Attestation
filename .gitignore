@@ -1,0 +1,4 @@
+.idea
+SafetyNet_Attestation.egg-info/*
+build/*
+dist/*
