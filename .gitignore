@@ -1,4 +1,4 @@
 .idea
-SafetyNet_Attestation.egg-info/*
+pySafetyNet_Attestation.egg-info/*
 build/*
 dist/*
