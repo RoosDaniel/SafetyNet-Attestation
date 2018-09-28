@@ -23,7 +23,8 @@ attestation.verify_online(api_key)
 
 **`verify_online` takes the following optional parameters:**
 
-* `url="<standard url>"`: If you for some reason wish to validate against some other url.
+* `url="<standard url>"`
+	* If you for some reason wish to validate against some other url.
 
 `<standard url>` can be found at [Google's SafetyNet documentation](https://developer.android.com/training/safetynet/).
 
