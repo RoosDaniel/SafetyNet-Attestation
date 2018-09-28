@@ -42,18 +42,34 @@ attestation.verify_offline()
 **`verify_offline` takes the following optional parameters:**
 
 * `apkPackageName=None`
+
 * `nonce=None`
+
 * `apkDigestSha256=None`
+	* `str` of hex-values.
+
 * `apkCertificateDigestSha256=None`
+	* Can be `list` of `str` or `str`.
+
 * `check_basicIntegrity=True`
+
 * `check_ctsProfileMatch=True`
-* `hostname="attest.android.com"`: Used for TLS validation of the certificate.
+
+* `hostname="attest.android.com"`
+	* Used for TLS validation of the certificate. Only modify if you know what you are doing.
 
 A full explanation of the parameters above can be found at [Google's SafetyNet documentation](https://developer.android.com/training/safetynet/)
 
 Once a token has been verified, the following fields can be used:
 
-* `header`: A `dict`of the token's header.
-* `body`: A `dict` of the token's body.
-* `certificates`: A `list`of base64-decoded certificates present in the `header`.
-* `public_key_pem`: The public key of the certificate.
+* `header`
+	* A `dict`of the token's header.
+
+* `body`
+	* A `dict` of the token's body.
+
+* `certificates`
+	* A `list`of base64-decoded certificates present in the `header`.
+
+* `public_key_pem`
+	* The public key of the certificate.
