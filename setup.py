@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pySafetyNet-Attestation",
-    version="0.0.2",
+    version="0.0.3",
     author="Daniel Roos",
     author_email="daniel@roos.io",
     description="Verify JWS-attestations from Google's SafetyNet.",
@@ -17,7 +17,8 @@ setuptools.setup(
     install_requires=[
         "pyOpenSSL",
         "certvalidator",
-        "jwcrypto"
+        "jwcrypto",
+        "requests"
     ],
     classifiers=[
         "Programming Language :: Python :: 3",

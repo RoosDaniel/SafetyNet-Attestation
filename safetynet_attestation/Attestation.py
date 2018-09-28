@@ -79,6 +79,12 @@ class Attestation:
 
         return base64.b64decode(self.body["apkCertificateDigestSha256"][0])
 
+    def _get_param_decoded(self, param):
+        if self.body is None:
+            self.body = self._get_json_at_index(1)
+
+        return base64.b64decode(self.body[param])
+
     def _verify_apkCertificateDigestSha256(self, apkCertificateDigestSha256):
         apkCertificateDigestSha256 = [bytes.fromhex(fp.replace(":", "")) for fp in apkCertificateDigestSha256]
         to_verify = self._get_apkCertificateDigestSha256()
@@ -88,7 +94,7 @@ class Attestation:
                 return True
         return False
 
-    def _verify_body(self, apkPackageName, apkDigestSha256, apkCertificateDigestSha256,
+    def _verify_body(self, apkPackageName, nonce, apkDigestSha256, apkCertificateDigestSha256,
                      check_basicIntegrity, check_ctsProfileMatch):
         if check_basicIntegrity and not self.body.get("basicIntegrity", False):
             raise InvalidJWSBodyException.missing_exc("basicIntegrity")
@@ -100,9 +106,19 @@ class Attestation:
             raise InvalidJWSBodyException.no_match_exc("apkPackageName",
                                                        apkPackageName, self.body["apkPackageName"])
 
-        if apkDigestSha256 is not None and apkDigestSha256 != self.body["apkDigestSha256"]:
-            raise InvalidJWSBodyException.no_match_exc("apkDigestSha256",
-                                                       apkDigestSha256, self.body["apkDigestSha256"])
+        if nonce is not None:
+            from_jws = self._get_param_decoded("nonce")
+
+            if nonce != from_jws:
+                raise InvalidJWSBodyException.no_match_exc("nonce", nonce, from_jws)
+
+        if apkDigestSha256 is not None:
+            apkDigestSha256 = bytes.fromhex(apkDigestSha256.replace(":", ""))
+
+            from_jws = self._get_param_decoded("apkDigestSha256")
+
+            if apkDigestSha256 != from_jws:
+                raise InvalidJWSBodyException.no_match_exc("apkDigestSha256")
 
         if apkCertificateDigestSha256 is not None:
             if type(apkCertificateDigestSha256) == str:
@@ -111,7 +127,7 @@ class Attestation:
             if not self._verify_apkCertificateDigestSha256(apkCertificateDigestSha256):
                 raise InvalidJWSBodyException.no_match_exc("apkCertificateDigestSha256")
 
-    def verify_offline(self, hostname="attest.android.com", apkPackageName=None, apkDigestSha256=None,
+    def verify_offline(self, hostname="attest.android.com", apkPackageName=None, nonce=None, apkDigestSha256=None,
                        apkCertificateDigestSha256=None, check_basicIntegrity=True, check_ctsProfileMatch=True):
         self.header = self._get_json_at_index(index=0)
         self.body = self._get_json_at_index(index=1)
@@ -120,5 +136,5 @@ class Attestation:
 
         self._verify_certificates(hostname=hostname)
         self._verify_hash()
-        self._verify_body(apkPackageName, apkDigestSha256, apkCertificateDigestSha256, check_basicIntegrity,
+        self._verify_body(apkPackageName, nonce, apkDigestSha256, apkCertificateDigestSha256, check_basicIntegrity,
                           check_ctsProfileMatch)
