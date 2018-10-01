@@ -7,6 +7,10 @@ A package for verifying JWS-attestations from Google's SafetyNet.
 This package verifies [SafetyNet attestations](https://developer.android.com/training/safetynet/) by following the steps described on the page. It allows you to specify what parts of the JWS-body you wish to verify, but will always atleast verify the certificate and validity of the JWS.
 
 
+## Installation
+
+`pip install pySafetyNet-Attestation`
+
 ## Usage
 
 ### Online verification
