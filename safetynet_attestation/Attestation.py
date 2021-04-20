@@ -26,6 +26,17 @@ class InvalidJWSBodyException(Exception):
         return cls("%s missing or False." % item)
 
 
+class OnlineVerificationException(Exception):
+    @classmethod
+    def response_error(cls, response):
+        message = "Online verification request failed. "
+        message += " Status code: [%s] " % response.status_code
+        response_json = response.json().get('error')
+        if response_json:
+            message += " Message: [%s] " % response_json.get("message", "None")
+        return cls(message)
+
+
 class Attestation:
     jws_token = ""
 
@@ -39,7 +50,8 @@ class Attestation:
 
     def verify_online(self, api_key, url=_attestation_url):
         r = requests.post(url + api_key, json={"signedAttestation": self.jws_token})
-
+        if not r.ok:
+            raise OnlineVerificationException.response_error(r)
         return r.json()["isValidSignature"]
 
     def _get_json_at_index(self, index):
